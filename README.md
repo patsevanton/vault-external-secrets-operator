@@ -26,7 +26,21 @@ terragrunt run-all apply
 ./change_context.sh
 ```
 
+## FluxCD
+Устанавливаем последний релиз FluxCD до версии 2.0.0
+https://github.com/fluxcd/flux2/releases/tag/v0.41.2
+
+Получаем личный токен доступа к [Github](https://github.com/settings/tokens). Проверьте все разрешения в разделе репозиторий.
+
+Export them:
+```shell
+export GITHUB_TOKEN=<your-token>
+export GITHUB_USER=patsevanton # <your-github-username>
+```
+
+
 Запускаем bootstrap FluxCD
 ```shell
-
+flux bootstrap github --owner=$GITHUB_USER --repository=flux-vault-external-secrets-operator --branch=main 
+--path=./gitops --personal
 ```
