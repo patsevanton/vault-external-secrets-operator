@@ -1,8 +1,9 @@
 # Kubernetes секреты из Vault используя external-secrets-operator и FluxCD
 
 ## Введение
-В этой статье будет описано как создать kubernetes секреты из Vault с помощью AppRole используя external-secrets-operator и FluxCD.
+В этой статье будет описано как создать kubernetes секреты из Vault с помощью AppRole используя 
+external-secrets-operator. Также будут использованы Terragrunt и FluxCD.
 
 ## Kubernetes кластер
-Для начала создадим Kubernetes кластер (например, в Яндекс облаке)
+Для начала создадим Kubernetes кластер (например, в Яндекс облаке) с помощью Terragrunt.
 
