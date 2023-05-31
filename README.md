@@ -20,3 +20,13 @@ cd terraform-k8s-terragrunt-vault-external-secret
 terragrunt run-all apply
 ```
 
+Сформируем файл конфигурации kubernetes.
+Подробности и комментарии находятся внутри скрипта.
+```shell
+./change_context.sh
+```
+
+Запускаем bootstrap FluxCD
+```shell
+
+```
