@@ -1,5 +1,13 @@
-/.idea/flux-vault-external-secrets-operator.iml
-/.idea/.gitignore
-/.idea/misc.xml
-/.idea/modules.xml
-/.idea/vcs.xml
+### Terraform files
+**/.*.lock.hcl
+**/*.tfstate
+**/*.tfstate.backup
+**/.terraform/*
+**/.*.tfstate.lock.info
+**/*.tfvars
+/.idea/
+**/terraform.log
+**/acme-issuer.yaml
+**/*.iml
+**/env.hcl
+**/.terragrunt-cache/*
