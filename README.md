@@ -44,3 +44,10 @@ export GITHUB_USER=patsevanton # <your-github-username>
 flux bootstrap github --owner=$GITHUB_USER --repository=flux-vault-external-secrets-operator --branch=main 
 --path=./gitops --personal
 ```
+
+https://github.com/tiwarisanjay/external-secrets-operator
+https://github.com/tiwarisanjay/argocd-everything/blob/main/argocd-ha-vault-sso/README.md
+https://artifacthub.io/packages/helm/bitnami/vault
+https://fluxcd.io/flux/cheatsheets/oci-artifacts/
+https://fluxcd.io/flux/cmd/flux_bootstrap_github/
+https://gengwg.medium.com/setting-up-flux-v2-with-kind-cluster-and-github-on-your-laptop-56e28b0a8120
