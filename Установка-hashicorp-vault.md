@@ -1,6 +1,6 @@
 # Установка hashicorp vault
 ```shell
-helm install vault oci://registry-1.docker.io/bitnamicharts/vault --version 0.2.1
+helm install vault oci://registry-1.docker.io/bitnamicharts/vault --version 0.2.1 --wait
 ```
 
 - Просмотр пользовательского интерфейса hashicorp vault
