@@ -25,6 +25,11 @@ export YC_TOKEN="ваш yandex cloud токен"
 terragrunt run-all apply
 ```
 
+Выходим из каталога terraform-k8s-terragrunt-vault-external-secret
+```shell
+cd terraform-k8s-terragrunt-vault-external-secret
+```
+
 Сформируем файл конфигурации kubernetes.
 Подробности и комментарии находятся внутри скрипта.
 ```shell
