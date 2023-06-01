@@ -54,6 +54,12 @@ flux bootstrap github --owner=$GITHUB_USER --repository=flux-vault-external-secr
 --branch=main --path=./gitops --personal
 ```
 
+# Установка hashicorp vault
+```shell
+helm repo add bitnamicharts oci://registry-1.docker.io/bitnamicharts/vault
+helm install vault bitnamicharts/vault -n vault --create-namespace
+```
+
 # Links:
 https://github.com/fvoges/terraform-vault-basic-workflow
 https://github.com/tiwarisanjay/external-secrets-operator
