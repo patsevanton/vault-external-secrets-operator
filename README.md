@@ -64,3 +64,5 @@ https://artifacthub.io/packages/helm/bitnami/vault
 https://fluxcd.io/flux/cheatsheets/oci-artifacts/
 https://fluxcd.io/flux/cmd/flux_bootstrap_github/
 https://gengwg.medium.com/setting-up-flux-v2-with-kind-cluster-and-github-on-your-laptop-56e28b0a8120
+https://github.com/hashicorp/terraform-provider-vault/blob/main/website/docs/r/mount.html.md
+
