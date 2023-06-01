@@ -49,6 +49,8 @@ flux bootstrap github --owner=$GITHUB_USER --repository=flux-vault-external-secr
 --path=./gitops --personal
 ```
 
+# Links:
+https://github.com/fvoges/terraform-vault-basic-workflow
 https://github.com/tiwarisanjay/external-secrets-operator
 https://github.com/tiwarisanjay/argocd-everything/blob/main/argocd-ha-vault-sso/README.md
 https://artifacthub.io/packages/helm/bitnami/vault
