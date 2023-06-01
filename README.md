@@ -38,7 +38,6 @@ export GITHUB_TOKEN=<your-token>
 export GITHUB_USER=patsevanton # <your-github-username>
 ```
 
-
 Запускаем bootstrap FluxCD для репозитория. У вас будет другой параметр `--repository`
 ```shell
 flux bootstrap github --owner=$GITHUB_USER --repository=flux-vault-external-secrets-operator --branch=main 
