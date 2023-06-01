@@ -3,54 +3,55 @@
 helm install vault oci://registry-1.docker.io/bitnamicharts/vault --version 0.2.1 -n vault --create-namespace
 ```
 
-- Просмотр пользовательского интерфейса hashicorp vault
-```shell 
-kubectl port-forward vault-server-0 8200:8200 -n vault
-```
-
 - Инициализация и распечатывание хранилища
 ```shell
-$kubectl get pods -l app.kubernetes.io/name=vault
-NAME                                    READY   STATUS    RESTARTS   AGE
-vault-0                                 0/1     Running   0          1m49s
+$kubectl get pods --namespace "vault" -l app.kubernetes.io/instance=vault
+NAME                              READY   STATUS    RESTARTS   AGE
+vault-injector-6f8fb5dcff-bbl2s   0/1     Running   0          14s
+vault-server-0                    0/1     Pending   0          7s
 ```
 
 - Инициализируйте один сервер хранилища с количеством общих ключей по умолчанию и пороговым значением ключа по умолчанию:
 ```shell
-$kubectl exec -ti vault-0 -n vault -- vault operator init
-Unseal Key 1: MBFSDepD9E6whREc6Dj+k3pMaKJ6cCnCUWcySJQymObb
-Unseal Key 2: zQj4v22k9ixegS+94HJwmIaWLBL3nZHe1i+b/wHz25fr
-Unseal Key 3: 7dbPPeeGGW3SmeBFFo04peCKkXFuuyKc8b2DuntA4VU5
-Unseal Key 4: tLt+ME7Z7hYUATfWnuQdfCEgnKA2L173dptAwfmenCdf
-Unseal Key 5: vYt9bxLr0+OzJ8m7c7cNMFj7nvdLljj0xWRbpLezFAI9
+$kubectl exec -ti vault-server-0 -n vault -- vault operator init
+Unseal Key 1: 3hfzlgCDXNLzNMryUiUf79ZWKAkwEjANp/CVwtUxeORx
+Unseal Key 2: ii9jcnE7NWalvL0+KfIfU7j4U7l1kGuWo/E8rlz8A1BK
+Unseal Key 3: uAr8fUedlkbYCUob1FGrDVBCmPQ0v+pplvkfLznir6qV
+Unseal Key 4: copw9ipbbWrxFQvob4WEOl9TVctwxh8m1nj5p2eGp4y4
+Unseal Key 5: GyPKNmuVwrK4qIP79hm6c2DXMBBra1SnN+MU7Zzg9nS+
 
-Initial Root Token: s.zJNwZlRrqISjyBHFMiEca6GF
+Initial Root Token: hvs.pPEDt7A7JcpqTXYDI7Esk8iW
 ```
 
 - В выходных данных отображаются общие ключи и сгенерированный исходный корневой ключ. Распечатайте сервер hashicorp vault с общими ключами до тех пор, пока не будет достигнуто пороговое значение ключа:
 ```shell
-## Unseal the first vault server until it reaches the key threshold
-$ kubectl exec -ti vault-0 -n vault -- vault operator unseal # ... Unseal Key 1
-$ kubectl exec -ti vault-0 -n vault -- vault operator unseal # ... Unseal Key 2
-$ kubectl exec -ti vault-0 -n vault -- vault operator unseal # ... Unseal Key 3
+$ kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal Key 1
+$ kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal Key 2
+$ kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal Key 3
+```
+
+- В отдельном терминале пробросьте порт 8200 от hashicorp vault
+```shell 
+kubectl port-forward vault-server-0 8200:8200 -n vault
+```
+
+- Экспортируйте адрес hashicorp vault
+```shell
+export VAULT_ADDR=http://127.0.0.1:8200
 ```
 
 - Войдите в систему из командной строки.
 ```shell
-$ vault login 
+$ vault login
 Token (will be hidden): 
-WARNING! The VAULT_TOKEN environment variable is set! The value of this
-variable will take precedence; if this is unwanted please unset VAULT_TOKEN or
-update its value accordingly.
-
 Success! You are now authenticated. The token information displayed below
 is already stored in the token helper. You do NOT need to run "vault login"
 again. Future Vault requests will automatically use this token.
 
 Key                  Value
 ---                  -----
-token                s.cdWzApasdkfjkasdqMHnuv
-token_accessor       o03balkkjadskdfjd+uw4k
+token                hvs.pPEDt7A7JcpqTXYDI7Esk8iW
+token_accessor       Dinm9BngAbEDAj8gEpFtoAI2
 token_duration       ∞
 token_renewable      false
 token_policies       ["root"]
@@ -62,10 +63,7 @@ policies             ["root"]
 
 ## APP ROLE
 - Войдите в систему с помощью своего корневого токена
-- Экспортируйте адрес hashicorp vault
-    ```shell
-    export VAULT_ADDR=http://127.0.0.1:8200
-    ```
+
 - Включите engine kv.
     ```shell
     vault secrets enable -version=2 -path=argocd kv
