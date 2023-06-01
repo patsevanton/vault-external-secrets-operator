@@ -15,6 +15,11 @@ external-secrets-operator. Также будут использованы Terrag
 cd terraform-k8s-terragrunt-vault-external-secret
 ```
 
+Экспортируем yandex cloud токен.
+```shell
+export YC_TOKEN="ваш yandex cloud токен"
+```
+
 Запускаем применение всех terraform модулей в текущем каталоге:
 ```shell
 terragrunt run-all apply
