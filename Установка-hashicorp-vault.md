@@ -65,67 +65,67 @@ policies             ["root"]
 - Войдите в систему с помощью своего корневого токена
 
 - Включите engine kv.
-    ```shell
-    vault secrets enable -version=2 -path=argocd kv
-    ```
+```shell
+vault secrets enable -version=2 -path=argocd kv
+```
 - Посмотрите ваши текущие секреты.
-    ```shell
-    vault secrets list
-    ```
+```shell
+vault secrets list
+```
 - Создавайте секрет.
-    ```shell
-    vault kv put argocd/mysecret foo=bar
-    ```
+```shell
+vault kv put argocd/mysecret foo=bar
+```
 - Включите approle.
-    ```shell
-    vault auth enable approle
-    ```
+```shell
+vault auth enable approle
+```
 - Создайте политику хранилища
-    ```shell
-    $vault policy write read-policy -<<EOF
-    # Read-only permission on secrets stored at 'argocd/data'
-    path "argocd/*" {
-    capabilities = [ "read", "list" ]
-    }
-    EOF
-    ```
+```shell
+$vault policy write read-policy -<<EOF
+# Read-only permission on secrets stored at 'argocd/data'
+path "argocd/*" {
+capabilities = [ "read", "list" ]
+}
+EOF
+```
 - Создайте роль для approle
-    ```shell
-    vault write auth/approle/role/argocd token_policies="read-policy"
-    ```
+```shell
+vault write auth/approle/role/argocd token_policies="read-policy"
+```
 - Посмотрите политику
-    ```shell
-    vault read auth/approle/role/argocd
-    ```
+```shell
+vault read auth/approle/role/argocd
+```
 - Получите идентификатор роли approle (role_id)
-    ```shell
-    $vault read auth/approle/role/argocd/role-id
+```shell
+$vault read auth/approle/role/argocd/role-id
 
-    Key     Value
-    ---     -----
-    role_id 675a50e7-cfe0-be76-e35f-49ec009731ea
-    ```
+Key     Value
+---     -----
+role_id 675a50e7-cfe0-be76-e35f-49ec009731ea
+```
 - Получите секретный идентификатор (secret_id)
-    ```shell
-     $vault write -force auth/approle/role/argocd/secret-id
+```shell
+ $vault write -force auth/approle/role/argocd/secret-id
 
-    Key                 Value
-    ---                 -----
-    secret_id           ed0a642f-2acf-c2da-232f-1b21300d5f29
-    secret_id_accessor  a240a31f-270a-4765-64bd-94ba1f65703c
-    ```
+Key                 Value
+---                 -----
+secret_id           ed0a642f-2acf-c2da-232f-1b21300d5f29
+secret_id_accessor  a240a31f-270a-4765-64bd-94ba1f65703c
+```
 
 ### Проверяем, работает ли approle или нет
 - Войдите в систему, используя свою approle
-    ```shell
-    vault write auth/approle/login role_id="675a50e7-cfe0-be76-e35f-49ec009731ea" \
-    secret_id="ed0a642f-2acf-c2da-232f-1b21300d5f29"
-    ```
+```shell
+vault write auth/approle/login role_id="675a50e7-cfe0-be76-e35f-49ec009731ea" \
+secret_id="ed0a642f-2acf-c2da-232f-1b21300d5f29"
+```
 - Посмотрите ваши текущие секреты.
-    ```shell
-    vault kv list argocd/
-    ```
+```shell
+vault kv list argocd/
+```
 - Прочитайте секрет.
-    ```shell
-    vault kv get test3/mysecret
-    ```
+```shell
+vault kv get test3/mysecret
+```
