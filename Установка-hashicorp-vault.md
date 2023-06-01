@@ -66,7 +66,7 @@ policies             ["root"]
 
 - Включите engine kv.
 ```shell
-vault secrets enable -version=2 -path=argocd kv
+vault secrets enable -version=2 -path=app kv
 ```
 - Посмотрите ваши текущие секреты.
 ```shell
@@ -74,7 +74,7 @@ vault secrets list
 ```
 - Создавайте секрет.
 ```shell
-vault kv put argocd/mysecret foo=bar
+vault kv put app/mysecret foo=bar
 ```
 - Включите approle.
 ```shell
@@ -83,23 +83,23 @@ vault auth enable approle
 - Создайте политику хранилища
 ```shell
 $vault policy write read-policy -<<EOF
-# Read-only permission on secrets stored at 'argocd/data'
-path "argocd/*" {
+# Read-only permission on secrets stored at 'app/data'
+path "app/*" {
 capabilities = [ "read", "list" ]
 }
 EOF
 ```
 - Создайте роль для approle
 ```shell
-vault write auth/approle/role/argocd token_policies="read-policy"
+vault write auth/approle/role/app token_policies="read-policy"
 ```
 - Посмотрите политику
 ```shell
-vault read auth/approle/role/argocd
+vault read auth/approle/role/app
 ```
 - Получите идентификатор роли approle (role_id)
 ```shell
-$vault read auth/approle/role/argocd/role-id
+$vault read auth/approle/role/app/role-id
 
 Key     Value
 ---     -----
@@ -107,7 +107,7 @@ role_id 675a50e7-cfe0-be76-e35f-49ec009731ea
 ```
 - Получите секретный идентификатор (secret_id)
 ```shell
- $vault write -force auth/approle/role/argocd/secret-id
+ $vault write -force auth/approle/role/app/secret-id
 
 Key                 Value
 ---                 -----
@@ -123,7 +123,7 @@ secret_id="ed0a642f-2acf-c2da-232f-1b21300d5f29"
 ```
 - Посмотрите ваши текущие секреты.
 ```shell
-vault kv list argocd/
+vault kv list app/
 ```
 - Прочитайте секрет.
 ```shell
