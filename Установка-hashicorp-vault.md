@@ -10,7 +10,7 @@ kubectl port-forward vault-server-0 8200:8200 -n vault
 
 - Инициализация и распечатывание хранилища
 ```shell
-kubectl get pods -l app.kubernetes.io/name=vault
+$kubectl get pods -l app.kubernetes.io/name=vault
 NAME                                    READY   STATUS    RESTARTS   AGE
 vault-0                                 0/1     Running   0          1m49s
 ```
