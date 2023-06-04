@@ -6,7 +6,7 @@ vault server -dev
 # Copy root token from output `vault server -dev`
 
 # Export root token
-export VAULT_TOKEN=hvs.UCNpuNfhUgYH2dhPOcLUHbiu
+export VAULT_TOKEN=hvs.AeB9oPEYs1HotUyJIp1SamXl
 
 # Export vault address
 export VAULT_ADDR=http://127.0.0.1:8200
