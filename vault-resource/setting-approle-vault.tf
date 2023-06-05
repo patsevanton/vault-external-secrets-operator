@@ -10,7 +10,8 @@ resource "vault_kv_secret_v2" "example" {
   name  = "secret"
   data_json = jsonencode(
     {
-      foo = "bar"
+      POSTGRES_USER = "admin",
+      POSTGRES_PASSWORD = "123456"
     }
   )
 }
