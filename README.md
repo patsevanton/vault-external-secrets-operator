@@ -186,10 +186,35 @@ capabilities = [ "read", "list" ]
 }
 EOF
 ```
-- Создайте роль для approle
+
+Terraform код создания политики для чтения по пути app/*
+```hcl
+resource "vault_policy" "read-policy" {
+  name = "read-policy"
+
+  policy = <<EOT
+path "app/*" {
+  capabilities = ["read", "list"]
+}
+EOT
+}
+```
+
+- Создайте роль для approle.
 ```shell
 vault write auth/approle/role/app token_policies="read-policy"
 ```
+
+Terraform код создания роли для approle.
+```hcl
+resource "vault_approle_auth_backend_role" "app" {
+  backend        = vault_auth_backend.approle.path
+  role_name      = "app"
+  token_policies = ["read-policy"]
+}
+```
+
+
 - Посмотрите политику
 ```shell
 vault read auth/approle/role/app
