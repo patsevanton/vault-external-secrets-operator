@@ -171,7 +171,7 @@ vault auth enable approle
 ```
 
 
-- Создайте политику хранилища
+- Создайте политику для чтения по пути app/*
 ```shell
 $vault policy write read-policy -<<EOF
 # Read-only permission on secrets stored at 'app/data'
