@@ -5,9 +5,9 @@ resource "vault_mount" "kvv2-data" {
   description = "KV Version 2 secret engine mount"
 }
 
-resource "vault_kv_secret_v2" "example" {
+resource "vault_kv_secret_v2" "data-postgres" {
   mount = vault_mount.kvv2-data.path
-  name  = "secret"
+  name  = "postgres"
   data_json = jsonencode(
     {
       POSTGRES_USER = "admin",

@@ -22,7 +22,7 @@ policies             ["root"]
 
 - Включите engine kv из CLI.
 ```shell
-vault secrets enable -version=2 -path=app kv
+vault secrets enable -version=2 -path=data kv
 ```
 
 Terraform код включения engine kv.
@@ -35,14 +35,9 @@ resource "vault_mount" "kvv2-data" {
 }
 ```
 
-- Посмотрите ваши текущие секреты.
-```shell
-vault secrets list
-```
-
 - Создайте секрет из CLI.
 ```shell
-vault kv put data/postgres foo=bar
+vault kv put data/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
 ```
 
 Terraform код создания секрета. Но лучше секреты в коде не держать.
@@ -57,6 +52,17 @@ resource "vault_kv_secret_v2" "example" {
     }
   )
 }
+```
+
+- Посмотрите ваши текущие секреты.
+```shell
+$ vault secrets list
+Path          Type         Accessor              Description
+----          ----         --------              -----------
+cubbyhole/    cubbyhole    cubbyhole_fc3b7606    per-token private secret storage
+data/         kv           kv_925ebd04           KV Version 2 secret engine mount
+identity/     identity     identity_f9561de2     identity store
+sys/          system       system_fc5b17f1       system endpoints used for control, policy and debugging
 ```
 
 - Включите approle из CLI.
@@ -74,7 +80,7 @@ resource "vault_auth_backend" "approle" {
 - Создайте политику для чтения по пути app/*
 ```shell
 $vault policy write read-policy -<<EOF
-path "data/*" {
+path "data/postgres" {
 capabilities = [ "read", "list" ]
 }
 EOF
@@ -86,7 +92,7 @@ resource "vault_policy" "read-policy" {
   name = "read-policy"
 
   policy = <<EOT
-path "data/*" {
+path "data/postgres" {
   capabilities = ["read", "list"]
 }
 EOT
@@ -95,7 +101,7 @@ EOT
 
 - Создайте роль для approle.
 ```shell
-vault write auth/approle/role/app token_policies="read-policy"
+vault write auth/approle/role/data token_policies="read-policy"
 ```
 
 Terraform код создания роли для approle.
