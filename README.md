@@ -132,7 +132,7 @@ policies             ["root"]
 vault secrets enable -version=2 -path=app kv
 ```
 
-Или включите engine kv c помощью terraform кода
+Terraform код включения engine kv.
 ```hcl
 resource "vault_mount" "kvv2-app" {
   path        = "app"
@@ -152,7 +152,7 @@ vault secrets list
 vault kv put app/mysecret foo=bar
 ```
 
-Или создайте секрет c помощью terraform кода
+Terraform код создания секрета
 ```hcl
 resource "vault_kv_secret_v2" "example" {
   mount = vault_mount.kvv2-app.path
@@ -170,6 +170,12 @@ resource "vault_kv_secret_v2" "example" {
 vault auth enable approle
 ```
 
+Terraform код включения approle.
+```hcl
+resource "vault_auth_backend" "approle" {
+  type = "approle"
+}
+```
 
 - Создайте политику для чтения по пути app/*
 ```shell
