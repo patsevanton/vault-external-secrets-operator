@@ -280,6 +280,19 @@ vault kv get test3/mysecret
 
 
 
+Устанавливаем External Secrets Operator
+```shell
+helm repo add external-secrets https://charts.external-secrets.io
+
+helm install external-secrets \
+external-secrets/external-secrets \
+    -n external-secrets \
+    --create-namespace \
+    --version 0.8.3 \
+    --set installCRDs=true
+```
+
+
 # Links:
 https://github.com/fvoges/terraform-vault-basic-workflow
 https://github.com/tiwarisanjay/external-secrets-operator
