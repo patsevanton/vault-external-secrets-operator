@@ -9,8 +9,8 @@ again. Future Vault requests will automatically use this token.
 
 Key                  Value
 ---                  -----
-token                hvs.pPEDt7A7JcpqTXYDI7Esk8iW
-token_accessor       Dinm9BngAbEDAj8gEpFtoAI2
+token                hvs.NkWkXPiUFsy0RM69lZokLUu8
+token_accessor       85xbbBELOjTQo7PdXPHdsGEB
 token_duration       ∞
 token_renewable      false
 token_policies       ["root"]
@@ -79,7 +79,7 @@ resource "vault_auth_backend" "approle" {
 
 - Создайте политику для чтения по пути app/*
 ```shell
-$vault policy write read-policy -<<EOF
+$ vault policy write read-policy -<<EOF
 path "data/postgres" {
 capabilities = [ "read", "list" ]
 }
@@ -122,22 +122,22 @@ vault read auth/approle/role/data
 
 - Получите идентификатор роли approle (role_id)
 ```shell
-$vault read auth/approle/role/data/role-id
-
-Key     Value
----     -----
-role_id 675a50e7-cfe0-be76-e35f-49ec009731ea
+$ vault read auth/approle/role/data/role-id
+Key        Value
+---        -----
+role_id    14a1cec0-01c1-60b1-bfe1-c02c6a0fc014
 ```
 
 
 - Создайте и получите секретный идентификатор (secret_id)
 ```shell
- $vault write -force auth/approle/role/app/secret-id
-
-Key                 Value
----                 -----
-secret_id           ed0a642f-2acf-c2da-232f-1b21300d5f29
-secret_id_accessor  a240a31f-270a-4765-64bd-94ba1f65703c
+$ vault write -force auth/approle/role/data/secret-id
+Key                   Value
+---                   -----
+secret_id             d881315c-5ba9-93ea-c227-a9d4231bad28
+secret_id_accessor    61a4d2b1-d42e-3895-fa56-f2a8826cba98
+secret_id_num_uses    0
+secret_id_ttl         0s
 ```
 
 Terraform код создания секретного идентификатора (secret_id)
@@ -168,11 +168,11 @@ secret_id="ed0a642f-2acf-c2da-232f-1b21300d5f29"
 
 - Посмотрите ваши текущие секреты.
 ```shell
-vault kv list app/
+vault kv list data
 ```
 
 
 - Прочитайте секрет.
 ```shell
-vault kv get data/mysecret
+vault kv get data/postgres
 ```

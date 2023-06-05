@@ -21,10 +21,10 @@ resource "vault_auth_backend" "approle" {
 }
 
 resource "vault_policy" "data-read-policy" {
-  name = "data-read-policy"
+  name = "read-policy"
 
   policy = <<EOT
-path "data/*" {
+path "data/postgres" {
   capabilities = ["read", "list"]
 }
 EOT
@@ -33,7 +33,7 @@ EOT
 resource "vault_approle_auth_backend_role" "data" {
   backend        = vault_auth_backend.approle.path
   role_name      = "data"
-  token_policies = ["app-read-policy"]
+  token_policies = ["read-policy"]
 }
 
 

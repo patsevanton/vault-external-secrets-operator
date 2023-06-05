@@ -44,7 +44,7 @@ helm install vault oci://registry-1.docker.io/bitnamicharts/vault --version 0.2.
 
 - Инициализация и распечатывание хранилища
 ```shell
-$kubectl get pods --namespace "vault" -l app.kubernetes.io/instance=vault
+$ kubectl get pods --namespace "vault" -l app.kubernetes.io/instance=vault
 NAME                              READY   STATUS    RESTARTS   AGE
 vault-injector-6f8fb5dcff-bbl2s   0/1     Running   0          14s
 vault-server-0                    0/1     Pending   0          7s
@@ -53,13 +53,13 @@ vault-server-0                    0/1     Pending   0          7s
 - Инициализируйте один сервер хранилища с количеством общих ключей по умолчанию и пороговым значением ключа по умолчанию:
 ```shell
 $ kubectl exec -ti vault-server-0 -n vault -- vault operator init
-Unseal Key 1: pE9j22zN+yp+Pv039AsR1hwW3yGcyKV6QtMbRZpofiWK
-Unseal Key 2: pel1TOs6du8P32W/50+cEsXHxhDmWAlwBVFeEuDtkWQU
-Unseal Key 3: q7ZSoST9Ma14QJ662X2COSuoNEOX4TOKQylfH2Jf/Gll
-Unseal Key 4: +2pb2XCgZ9MTH2WdPLOQx2adBLtS2FGCTGtt1bALXQSf
-Unseal Key 5: 9TV8NL9nIJFkgJ6YAoGO7Ijy9ugjYWt4ChNs2DK5MAnu
+Unseal Key 1: +BUVjcZMuUFR+EtIwjt4H57VFRtbdkj7LotbFF33ADV7
+Unseal Key 2: OoicbcCIIRl+beqRMuDfmnS0XF//hWC+5rNDEDVq6R5R
+Unseal Key 3: S6HYS3UYcRzptqrRtBL+eazYxeBohGv/B+0Ku2utSxi1
+Unseal Key 4: El0XebwVbFcZckB20j6tQGWhjcRTiOmVgzGnxsGa3i6X
+Unseal Key 5: 0AdRUThHnqTiwVz64dEWI3gaqSTwx18NwnM7I2NBBJKF
 
-Initial Root Token: hvs.bbJlYu8IsBvPGp4tkxwNSrhh
+Initial Root Token: hvs.NkWkXPiUFsy0RM69lZokLUu8
 ```
 
 - В выходных данных отображаются общие ключи и сгенерированный исходный корневой ключ. Распечатайте сервер hashicorp vault с общими ключами до тех пор, пока не будет достигнуто пороговое значение ключа:
@@ -89,7 +89,7 @@ cd vault-resource
 
 Экспортируем ваш токен (в данном случае root токен)
 ```shell
-export VAULT_TOKEN=hvs.bbJlYu8IsBvPGp4tkxwNSrhh
+export VAULT_TOKEN=hvs.NkWkXPiUFsy0RM69lZokLUu8
 ```
 
 Применим конфигурацию terraform.
