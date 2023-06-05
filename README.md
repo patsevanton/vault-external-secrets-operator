@@ -219,6 +219,8 @@ resource "vault_approle_auth_backend_role" "app" {
 ```shell
 vault read auth/approle/role/app
 ```
+
+
 - Получите идентификатор роли approle (role_id)
 ```shell
 $vault read auth/approle/role/app/role-id
@@ -227,7 +229,9 @@ Key     Value
 ---     -----
 role_id 675a50e7-cfe0-be76-e35f-49ec009731ea
 ```
-- Получите секретный идентификатор (secret_id)
+
+
+- Создайте и получите секретный идентификатор (secret_id)
 ```shell
  $vault write -force auth/approle/role/app/secret-id
 
@@ -237,16 +241,38 @@ secret_id           ed0a642f-2acf-c2da-232f-1b21300d5f29
 secret_id_accessor  a240a31f-270a-4765-64bd-94ba1f65703c
 ```
 
+Terraform код создания секретного идентификатора (secret_id)
+```hcl
+resource "vault_approle_auth_backend_role_secret_id" "id" {
+  backend   = vault_auth_backend.approle.path
+  role_name = vault_approle_auth_backend_role.app.role_name
+}
+```
+
+
+Terraform код получения секретного идентификатора (secret_id) через terraform output
+```hcl
+output "secret_id" {
+  value     = vault_approle_auth_backend_role_secret_id.id.secret_id
+  sensitive = true
+}
+```
+
+
 ### Проверяем, работает ли approle или нет
 - Войдите в систему, используя свою approle
 ```shell
 vault write auth/approle/login role_id="675a50e7-cfe0-be76-e35f-49ec009731ea" \
 secret_id="ed0a642f-2acf-c2da-232f-1b21300d5f29"
 ```
+
+
 - Посмотрите ваши текущие секреты.
 ```shell
 vault kv list app/
 ```
+
+
 - Прочитайте секрет.
 ```shell
 vault kv get test3/mysecret
