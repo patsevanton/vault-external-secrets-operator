@@ -6,8 +6,8 @@ resource "vault_mount" "kvv2-app" {
 }
 
 resource "vault_kv_secret_v2" "example" {
-  mount               = vault_mount.kvv2-app.path
-  name                = "secret"
+  mount = vault_mount.kvv2-app.path
+  name  = "secret"
   data_json = jsonencode(
     {
       foo = "bar"
@@ -43,6 +43,6 @@ resource "vault_approle_auth_backend_role_secret_id" "id" {
 
 
 output "secret_id" {
-  value = vault_approle_auth_backend_role_secret_id.id.secret_id
+  value     = vault_approle_auth_backend_role_secret_id.id.secret_id
   sensitive = true
 }

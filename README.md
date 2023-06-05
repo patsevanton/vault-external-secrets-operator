@@ -127,22 +127,50 @@ policies             ["root"]
 ## APP ROLE
 - Войдите в систему с помощью своего корневого токена
 
-- Включите engine kv.
+- Включите engine kv из CLI.
 ```shell
 vault secrets enable -version=2 -path=app kv
 ```
+
+Или включите engine kv c помощью terraform кода
+```hcl
+resource "vault_mount" "kvv2-app" {
+  path        = "app"
+  type        = "kv"
+  options     = { version = "2" }
+  description = "KV Version 2 secret engine mount"
+}
+```
+
 - Посмотрите ваши текущие секреты.
 ```shell
 vault secrets list
 ```
-- Создавайте секрет.
+
+- Создайте секрет из CLI.
 ```shell
 vault kv put app/mysecret foo=bar
 ```
-- Включите approle.
+
+Или создайте секрет c помощью terraform кода
+```hcl
+resource "vault_kv_secret_v2" "example" {
+  mount = vault_mount.kvv2-app.path
+  name  = "secret"
+  data_json = jsonencode(
+    {
+      foo = "bar"
+    }
+  )
+}
+```
+
+- Включите approle из CLI.
 ```shell
 vault auth enable approle
 ```
+
+
 - Создайте политику хранилища
 ```shell
 $vault policy write read-policy -<<EOF
