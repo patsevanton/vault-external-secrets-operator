@@ -27,8 +27,8 @@ vault secrets enable -version=2 -path=app kv
 
 Terraform код включения engine kv.
 ```hcl
-resource "vault_mount" "kvv2-app" {
-  path        = "app"
+resource "vault_mount" "kvv2-data" {
+  path        = "data"
   type        = "kv"
   options     = { version = "2" }
   description = "KV Version 2 secret engine mount"
@@ -42,13 +42,13 @@ vault secrets list
 
 - Создайте секрет из CLI.
 ```shell
-vault kv put app/mysecret foo=bar
+vault kv put data/postgres foo=bar
 ```
 
 Terraform код создания секрета. Но лучше секреты в коде не держать.
 ```hcl
 resource "vault_kv_secret_v2" "example" {
-  mount = vault_mount.kvv2-app.path
+  mount = vault_mount.kvv2-data.path
   name  = "secret"
   data_json = jsonencode(
     {
@@ -73,8 +73,7 @@ resource "vault_auth_backend" "approle" {
 - Создайте политику для чтения по пути app/*
 ```shell
 $vault policy write read-policy -<<EOF
-# Read-only permission on secrets stored at 'app/data'
-path "app/*" {
+path "data/*" {
 capabilities = [ "read", "list" ]
 }
 EOF
@@ -86,7 +85,7 @@ resource "vault_policy" "read-policy" {
   name = "read-policy"
 
   policy = <<EOT
-path "app/*" {
+path "data/*" {
   capabilities = ["read", "list"]
 }
 EOT
@@ -100,9 +99,9 @@ vault write auth/approle/role/app token_policies="read-policy"
 
 Terraform код создания роли для approle.
 ```hcl
-resource "vault_approle_auth_backend_role" "app" {
+resource "vault_approle_auth_backend_role" "data" {
   backend        = vault_auth_backend.approle.path
-  role_name      = "app"
+  role_name      = "data"
   token_policies = ["read-policy"]
 }
 ```
@@ -110,13 +109,13 @@ resource "vault_approle_auth_backend_role" "app" {
 
 - Посмотрите политику
 ```shell
-vault read auth/approle/role/app
+vault read auth/approle/role/data
 ```
 
 
 - Получите идентификатор роли approle (role_id)
 ```shell
-$vault read auth/approle/role/app/role-id
+$vault read auth/approle/role/data/role-id
 
 Key     Value
 ---     -----
@@ -138,7 +137,7 @@ Terraform код создания секретного идентификато�
 ```hcl
 resource "vault_approle_auth_backend_role_secret_id" "id" {
   backend   = vault_auth_backend.approle.path
-  role_name = vault_approle_auth_backend_role.app.role_name
+  role_name = vault_approle_auth_backend_role.data.role_name
 }
 ```
 
@@ -168,5 +167,5 @@ vault kv list app/
 
 - Прочитайте секрет.
 ```shell
-vault kv get test3/mysecret
+vault kv get data/mysecret
 ```

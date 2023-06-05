@@ -1,12 +1,12 @@
-resource "vault_mount" "kvv2-app" {
-  path        = "app"
+resource "vault_mount" "kvv2-data" {
+  path        = "data"
   type        = "kv"
   options     = { version = "2" }
   description = "KV Version 2 secret engine mount"
 }
 
 resource "vault_kv_secret_v2" "example" {
-  mount = vault_mount.kvv2-app.path
+  mount = vault_mount.kvv2-data.path
   name  = "secret"
   data_json = jsonencode(
     {
@@ -19,30 +19,30 @@ resource "vault_auth_backend" "approle" {
   type = "approle"
 }
 
-resource "vault_policy" "app-read-policy" {
-  name = "app-read-policy"
+resource "vault_policy" "data-read-policy" {
+  name = "data-read-policy"
 
   policy = <<EOT
-path "app/*" {
+path "data/*" {
   capabilities = ["read", "list"]
 }
 EOT
 }
 
-resource "vault_approle_auth_backend_role" "app" {
+resource "vault_approle_auth_backend_role" "data" {
   backend        = vault_auth_backend.approle.path
-  role_name      = "app"
+  role_name      = "data"
   token_policies = ["app-read-policy"]
 }
 
 
 resource "vault_approle_auth_backend_role_secret_id" "id" {
   backend   = vault_auth_backend.approle.path
-  role_name = vault_approle_auth_backend_role.app.role_name
+  role_name = vault_approle_auth_backend_role.data.role_name
 }
 
 output "role_id" {
-  value     = vault_approle_auth_backend_role.app.role_id
+  value     = vault_approle_auth_backend_role.data.role_id
   sensitive = true
 }
 
