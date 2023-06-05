@@ -19,8 +19,8 @@ resource "vault_auth_backend" "approle" {
   type = "approle"
 }
 
-resource "vault_policy" "read-policy" {
-  name = "read-policy"
+resource "vault_policy" "app-read-policy" {
+  name = "app-read-policy"
 
   policy = <<EOT
 path "app/*" {
@@ -32,7 +32,7 @@ EOT
 resource "vault_approle_auth_backend_role" "app" {
   backend        = vault_auth_backend.approle.path
   role_name      = "app"
-  token_policies = ["read-policy"]
+  token_policies = ["app-read-policy"]
 }
 
 

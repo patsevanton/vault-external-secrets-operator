@@ -128,7 +128,7 @@ vault secrets list
 vault kv put app/mysecret foo=bar
 ```
 
-Terraform код создания секрета
+Terraform код создания секрета. Но лучше секреты в коде не держать.
 ```hcl
 resource "vault_kv_secret_v2" "example" {
   mount = vault_mount.kvv2-app.path
