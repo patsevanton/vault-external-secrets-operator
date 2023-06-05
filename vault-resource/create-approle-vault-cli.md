@@ -79,8 +79,8 @@ resource "vault_auth_backend" "approle" {
 
 - Создайте политику для чтения по пути app/*
 ```shell
-$ vault policy write read-policy -<<EOF
-path "data/postgres" {
+vault policy write read-policy -<<EOF
+path "data/*" {
 capabilities = [ "read", "list" ]
 }
 EOF
@@ -92,7 +92,7 @@ resource "vault_policy" "read-policy" {
   name = "read-policy"
 
   policy = <<EOT
-path "data/postgres" {
+path "data/*" {
   capabilities = ["read", "list"]
 }
 EOT
@@ -125,7 +125,7 @@ vault read auth/approle/role/data
 $ vault read auth/approle/role/data/role-id
 Key        Value
 ---        -----
-role_id    14a1cec0-01c1-60b1-bfe1-c02c6a0fc014
+role_id    c927b91b-16f5-83c1-8736-953a51395b43
 ```
 
 
@@ -134,8 +134,8 @@ role_id    14a1cec0-01c1-60b1-bfe1-c02c6a0fc014
 $ vault write -force auth/approle/role/data/secret-id
 Key                   Value
 ---                   -----
-secret_id             d881315c-5ba9-93ea-c227-a9d4231bad28
-secret_id_accessor    61a4d2b1-d42e-3895-fa56-f2a8826cba98
+secret_id             8f3312cb-ab4d-c090-16a6-11efdf7ed21a
+secret_id_accessor    06134d7c-0c50-d1ab-0931-9c55ba9c6518
 secret_id_num_uses    0
 secret_id_ttl         0s
 ```
@@ -161,8 +161,8 @@ output "secret_id" {
 ### Проверяем, работает ли approle или нет
 - Войдите в систему, используя свою approle
 ```shell
-vault write auth/approle/login role_id="675a50e7-cfe0-be76-e35f-49ec009731ea" \
-secret_id="ed0a642f-2acf-c2da-232f-1b21300d5f29"
+vault write auth/approle/login role_id="c927b91b-16f5-83c1-8736-953a51395b43" \
+secret_id="8f3312cb-ab4d-c090-16a6-11efdf7ed21a"
 ```
 
 
