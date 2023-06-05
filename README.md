@@ -33,7 +33,7 @@ terragrunt run-all apply
 
 Выходим из каталога terraform-k8s-terragrunt-vault-external-secret
 ```shell
-cd terraform-k8s-terragrunt-vault-external-secret
+cd ..
 ```
 
 ## FluxCD
@@ -54,6 +54,10 @@ flux bootstrap github --owner=$GITHUB_USER --repository=flux-vault-external-secr
 --branch=main --path=./gitops --personal
 ```
 
+Проверяем что все поды запущены
+```shell
+kubectl get pods --namespace "flux-system"
+```
 
 
 # Links:
