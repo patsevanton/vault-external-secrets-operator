@@ -133,4 +133,4 @@ https://github.com/tiwarisanjay/argocd-everything/blob/main/argocd-ha-vault-sso/
 https://artifacthub.io/packages/helm/bitnami/vault
 https://gengwg.medium.com/setting-up-flux-v2-with-kind-cluster-and-github-on-your-laptop-56e28b0a8120
 https://github.com/hashicorp/terraform-provider-vault/blob/main/website/docs/r/mount.html.md
-
+https://earthly.dev/blog/eso-with-hashicorp-vault/
