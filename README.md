@@ -53,13 +53,13 @@ vault-server-0                    0/1     Pending   0          7s
 - Инициализируйте один сервер хранилища с количеством общих ключей по умолчанию и пороговым значением ключа по умолчанию:
 ```shell
 $kubectl exec -ti vault-server-0 -n vault -- vault operator init
-Unseal Key 1: HnMRsR4t9nJEm0DWBGNxqpKwC6bDS0uw5wZ8f6+9yt6n
-Unseal Key 2: dr91I4xjQap+HCPOnjAwMXhYekGd/oNiBKWTrVKfrBXb
-Unseal Key 3: YPqIeVzIgoDvHXDeA9Jc3iLJDqYcnEsPOWarQWWWuySV
-Unseal Key 4: pk5n6C/VQHxmK9D4N8Wc6Tjh7UMdKZtILhVvBXXEDwir
-Unseal Key 5: n9CVHap91BsjSEJhq3z1RXjkfUCU5Y8Pw8wQrzfbqfhb
+Unseal Key 1: YT1QnYq+VXSM5pnwz7MS3qYuMACMHTrBUUFpLNbmQ6Ud
+Unseal Key 2: ZigBlTiKhnFNecJFFNrI0eR2s87rnnqLJ+plcth/V1Yr
+Unseal Key 3: Y+TB1Jv9UjpWYLY3dQZBGo29vQ2rPcN2Q7NG/VrgFoAf
+Unseal Key 4: MSA7BdZ5/vm4pTEjrzhCxpUpQQM1fmWSAfpuxVMAWoaf
+Unseal Key 5: E7j1KuXeoj2rh3izGrILyk0nHEWnNlBAHcdUpkeV9Z2L
 
-Initial Root Token: hvs.AYVtnoS0RVvXusZgOjOJP1Yt
+Initial Root Token: hvs.CbxNhv9GcnjcUbAFCrQHOKti
 ```
 
 - В выходных данных отображаются общие ключи и сгенерированный исходный корневой ключ. Распечатайте сервер hashicorp vault с общими ключами до тех пор, пока не будет достигнуто пороговое значение ключа:
@@ -79,7 +79,31 @@ kubectl port-forward vault-server-0 8200:8200 -n vault
 export VAULT_ADDR=http://127.0.0.1:8200
 ```
 
-- Войдите в систему из командной строки.
+Вы можете либо настроить AppRole в Vault из CLI либо через terraform код.
+
+Настроим AppRole Vault через terraform.
+Переходим в директорию с файлом `setting-approle-vault.tf`
+```shell
+cd vault-resource
+```
+
+Экспортируем ваш токен (в данном случае root токен)
+```shell
+export VAULT_TOKEN=hvs.CbxNhv9GcnjcUbAFCrQHOKti
+```
+
+Применим конфигурацию terraform.
+```shell
+terraform apply
+```
+
+Выведите на экран терминала role-id и secret-id
+```shell
+terraform output role_id
+terraform output secret_id
+```
+
+- Войдите в систему из командной строки с помощью своего корневого токена
 ```shell
 $ vault login
 Token (will be hidden): 
@@ -99,9 +123,6 @@ policies             ["root"]
 ```
 
 - Мы будем использовать этот Token для подключения к hashicorp vault.
-
-## APP ROLE
-- Войдите в систему с помощью своего корневого токена
 
 - Включите engine kv из CLI.
 ```shell
