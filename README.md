@@ -103,7 +103,8 @@ terraform output role_id
 terraform output secret_id
 ```
 
-Настройка AppRole в Vault из CLI описана в отдельном файле [create-approle-vault-cli.md](create-approle-vault-cli.md)
+Настройка AppRole в Vault из CLI описана в отдельном файле [vault-resource/create-approle-vault-cli.md]
+(vault-resource/create-approle-vault-cli.md)
 
 
 Добавляем helm репо External Secrets Operator
@@ -127,10 +128,10 @@ kubectl apply -f external-secrets
 ```
 
 # Links:
-https://github.com/fvoges/terraform-vault-basic-workflow
-https://github.com/tiwarisanjay/external-secrets-operator
-https://github.com/tiwarisanjay/argocd-everything/blob/main/argocd-ha-vault-sso/README.md
-https://artifacthub.io/packages/helm/bitnami/vault
-https://gengwg.medium.com/setting-up-flux-v2-with-kind-cluster-and-github-on-your-laptop-56e28b0a8120
-https://github.com/hashicorp/terraform-provider-vault/blob/main/website/docs/r/mount.html.md
-https://earthly.dev/blog/eso-with-hashicorp-vault/
+ - https://github.com/fvoges/terraform-vault-basic-workflow
+ - https://github.com/tiwarisanjay/external-secrets-operator
+ - https://github.com/tiwarisanjay/argocd-everything/blob/main/argocd-ha-vault-sso/README.md
+ - https://artifacthub.io/packages/helm/bitnami/vault
+ - https://gengwg.medium.com/setting-up-flux-v2-with-kind-cluster-and-github-on-your-laptop-56e28b0a8120
+ - https://github.com/hashicorp/terraform-provider-vault/blob/main/website/docs/r/mount.html.md
+ - https://earthly.dev/blog/eso-with-hashicorp-vault/
