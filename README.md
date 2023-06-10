@@ -103,8 +103,7 @@ terraform output role_id
 terraform output secret_id
 ```
 
-Настройка AppRole в Vault из CLI описана в отдельном файле [vault-resource/create-approle-vault-cli.md]
-(vault-resource/create-approle-vault-cli.md)
+Настройка AppRole в Vault из CLI описана в отдельном файле [create-approle-vault-cli.md](vault-resource/create-approle-vault-cli.md)
 
 
 Добавляем helm репо External Secrets Operator
