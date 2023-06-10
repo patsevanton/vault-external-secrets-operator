@@ -6,6 +6,9 @@
 cd terragrunt-k8s
 ```
 
+Создаем файл env.hcl из примера env.hcl.example.
+Заполняем своими значениями.
+
 Экспортируем yandex cloud токен.
 ```shell
 export YC_TOKEN="ваш yandex cloud токен"
