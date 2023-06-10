@@ -5,7 +5,7 @@
 external-secrets-operator. Также будет использован Terragrunt.
 
 ## Kubernetes кластер
-Для начала создадим Kubernetes кластер (например, в Яндекс облаке с помощью Terragrunt.
+Для начала создадим Kubernetes кластер (например, в Яндекс облаке с помощью Terragrunt).
 
 Создание kubernetes кластера примерно описана в файле [create-k8s-by-terraform-in-yc.md](terragrunt-k8s/create-k8s-by-terraform-in-yc.md)
 
