@@ -1,7 +1,7 @@
 Структура каталогов с terraform модулями для terragrunt описана в статье [Управление инфраструктурой с
 помощью terragrunt (terraform) и gitlab ci](https://habr.com/ru/articles/719994/).
 
-Переходим в каталог terragrunt-k8s
+Переходим в каталог terragrunt-k8s относительно корня проекта
 ```shell
 cd terragrunt-k8s
 ```
