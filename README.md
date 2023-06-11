@@ -61,7 +61,7 @@ cd vault-resource
 
 Экспортируем ваш токен (в данном случае root токен)
 ```shell
-export VAULT_TOKEN=hvs.NkWkXPiUFsy0RM69lZokLUu8
+export VAULT_TOKEN=hvs.rUDPXI1htLRS8m6Ce0o8hXiU
 ```
 
 Применим конфигурацию terraform.
