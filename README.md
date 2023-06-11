@@ -14,7 +14,7 @@ external-secrets-operator. Также будет использован Terragru
 helm install vault oci://registry-1.docker.io/bitnamicharts/vault --version 0.2.1 -n vault --create-namespace
 ```
 
-- Инициализация и распечатывание хранилища
+- Инициализация и распечатывание хранилища. Ждем когда vault-server-0 перейдет в состояние Running.
 ```shell
 $ kubectl get pods --namespace "vault" -l app.kubernetes.io/instance=vault
 NAME                              READY   STATUS    RESTARTS   AGE
