@@ -70,13 +70,19 @@ terraform init
 terraform apply
 ```
 
+- Создайте секрет из CLI.
+```shell
+vault kv put data/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
+```
+
 Выведите на экран терминала role-id и secret-id
 ```shell
 terraform output role_id
 terraform output secret_id
 ```
 
-Настройка AppRole в Vault из CLI описана в отдельном файле [create-approle-vault-cli.md](vault-resource/create-approle-vault-cli.md)
+Если вам интересно настроить AppRole в Vault из CLI, то настройка описано в отдельном файле 
+[create-approle-vault-cli.md](vault-resource/create-approle-vault-cli.md)
 
 
 Добавляем helm репо External Secrets Operator
