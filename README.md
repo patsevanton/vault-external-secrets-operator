@@ -25,13 +25,13 @@ vault-server-0                    0/1     Pending   0          7s
 - Инициализируйте один сервер хранилища с количеством общих ключей по умолчанию и пороговым значением ключа по умолчанию:
 ```shell
 $ kubectl exec -ti vault-server-0 -n vault -- vault operator init
-Unseal Key 1: +BUVjcZMuUFR+EtIwjt4H57VFRtbdkj7LotbFF33ADV7
-Unseal Key 2: OoicbcCIIRl+beqRMuDfmnS0XF//hWC+5rNDEDVq6R5R
-Unseal Key 3: S6HYS3UYcRzptqrRtBL+eazYxeBohGv/B+0Ku2utSxi1
-Unseal Key 4: El0XebwVbFcZckB20j6tQGWhjcRTiOmVgzGnxsGa3i6X
-Unseal Key 5: 0AdRUThHnqTiwVz64dEWI3gaqSTwx18NwnM7I2NBBJKF
+Unseal Key 1: tnskTNw341nuqXRaeqPKsf0AkX+CZY1dGRtvgVrIUP5Y
+Unseal Key 2: TAbB5Ms41w9c8hn/tbgNInq7KeJkRcLRW+JKVN67P4Lt
+Unseal Key 3: UvTAGtv98M1/jRZgwkV2Q4+mT74bxJN8sGIe2HDk3okW
+Unseal Key 4: CXQBVtbfCGrmaTktnU0JyfaSfyYckKJz2tKXKALAU1Rq
+Unseal Key 5: oJM/z3zSjHiiH2wBrmvpBdOdub7CK++Cbr0stFtGnbB9
 
-Initial Root Token: hvs.NkWkXPiUFsy0RM69lZokLUu8
+Initial Root Token: hvs.rUDPXI1htLRS8m6Ce0o8hXiU
 ```
 
 - В выходных данных отображаются общие ключи и сгенерированный исходный корневой ключ. Распечатайте сервер hashicorp vault с общими ключами до тех пор, пока не будет достигнуто пороговое значение ключа:
