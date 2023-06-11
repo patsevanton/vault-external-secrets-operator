@@ -66,6 +66,7 @@ export VAULT_TOKEN=hvs.rUDPXI1htLRS8m6Ce0o8hXiU
 
 Применим конфигурацию terraform.
 ```shell
+terraform init
 terraform apply
 ```
 
