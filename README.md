@@ -166,12 +166,25 @@ token_meta_role_name    data
 
 Получаем список секретов
 ```shell
-vault kv list data/
+vault kv list secret
 ```
 
 Прочитаем секрет
 ```shell
-vault kv get data/postgres
+vault kv get secret/postgres
+```
+
+Если получаем ошибку, то меняем политику на такую и проверяем правильность путей (path)
+```shell
+resource "vault_policy" "secret-read-policy" {
+  name = "read-policy"
+
+  policy = <<EOT
+path "secret/*" {
+  capabilities = ["read", "list"]
+}
+EOT
+}
 ```
 
 # Links:
