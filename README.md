@@ -68,7 +68,6 @@ export VAULT_TOKEN=hvs.EsdGfUGUElenNaiThSDP7vlY
 ```shell
 terraform init
 terraform apply
-cd ..
 ```
 
 - Создайте секрет из CLI.
@@ -79,10 +78,12 @@ vault kv put data/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
 Либо создайте Vault секрет через UI как показано на скриншоте:
 ![Create-vault-secret-from-cli.png](vault-resource/Create-vault-secret-from-cli.png)
 
-Выведите на экран терминала role-id и secret-id
+Выведите на экран терминала role-id и secret-id.
+B выходим из директории vault-resource.
 ```shell
 terraform output role_id
 terraform output secret_id
+cd ..
 ```
 
 Если вам интересно настроить AppRole в Vault из CLI, то настройка описано в отдельном файле 
