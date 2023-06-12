@@ -104,9 +104,9 @@ external-secrets/external-secrets \
 ```
 
 Настройка external-secrets
-Указываем `role_id` в файле external-secrets/secret-store.yaml в поле `roleId`.
-Указываем `secret_id` в файле external-secrets/vault-secret.yaml в поле `secret-id`.
-Файлы конфигурации external-secrets подробно документированы.
+ - Указываем `role_id` в файле external-secrets/secret-store.yaml в поле `roleId`.
+ - Указываем `secret_id` в файле external-secrets/vault-secret.yaml в поле `secret-id`.
+Файлы конфигурации в директории external-secrets подробно документированы.
 
 
 Применяем yaml из директории external-secrets
