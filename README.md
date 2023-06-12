@@ -75,6 +75,9 @@ terraform apply
 vault kv put data/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
 ```
 
+Либо создайте Vault секрет через UI как показано на скриншоте:
+[Create-vault-secret-from-cli.png](vault-resource/Create-vault-secret-from-cli.png)
+
 Выведите на экран терминала role-id и secret-id
 ```shell
 terraform output role_id
@@ -99,6 +102,12 @@ external-secrets/external-secrets \
     --version 0.8.3 \
     --set installCRDs=true
 ```
+
+Настройка external-secrets
+Указываем `role_id` в файле external-secrets/secret-store.yaml в поле `roleId`.
+Указываем `secret_id` в файле external-secrets/vault-secret.yaml в поле `secret-id`.
+Файлы конфигурации external-secrets подробно документированы.
+
 
 Применяем yaml из директории external-secrets
 ```shell
