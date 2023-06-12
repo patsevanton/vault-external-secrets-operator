@@ -76,7 +76,7 @@ vault kv put data/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
 ```
 
 Либо создайте Vault секрет через UI как показано на скриншоте:
-[Create-vault-secret-from-cli.png](vault-resource/Create-vault-secret-from-cli.png)
+![Create-vault-secret-from-cli.png](vault-resource/Create-vault-secret-from-cli.png)
 
 Выведите на экран терминала role-id и secret-id
 ```shell
