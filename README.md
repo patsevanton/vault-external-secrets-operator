@@ -115,6 +115,9 @@ external-secrets/external-secrets \
 Применяем yaml из директории external-secrets
 ```shell
 kubectl apply -f external-secrets
+# kubectl apply -f external-secrets/vault-secret.yaml
+# kubectl apply -f external-secrets/secret-store.yaml
+# kubectl apply -f external-secrets/external-secret.yaml
 ```
 
 Дебаг:
@@ -130,6 +133,34 @@ vault-backend   3m19s   Valid    ReadWrite      True
 $ kubectl get ExternalSecret -n external-secrets external-secret
 NAMESPACE          NAME              STORE           REFRESH INTERVAL   STATUS              READY
 external-secrets   external-secret   vault-backend   5s                 SecretSyncedError   False
+```
+
+Смотрим describe ExternalSecret.
+```shell
+kubectl describe ExternalSecret -n external-secrets external-secret
+```
+Если видим ошибку `permission denied`, значит неправильно настроли пути.
+```shell
+Code: 403. Errors:
+
+* 1 error occurred:
+  * permission denied
+```
+
+Тестирование AppRole используя Vault cli.
+Входим в vault используя `role_id` и `secret_id`
+```shell
+vault write auth/approle/login role_id="role_id" secret_id="secret_id"
+```
+
+Получаем список секретов
+```shell
+vault kv list argocd/
+```
+
+Прочитаем секрет
+```shell
+vault kv get test3/mysecret
 ```
 
 # Links:
