@@ -2,12 +2,13 @@
 
 ## Введение
 В этой статье будет описано как создать kubernetes секреты из Vault с помощью AppRole используя 
-external-secrets-operator. Также будет использован Terragrunt.
+external-secrets-operator.
 
 ## Kubernetes кластер
 Для начала создадим Kubernetes кластер (например, в Яндекс облаке с помощью Terragrunt).
 
-Создание kubernetes кластера примерно описана в файле [create-k8s-by-terraform-in-yc.md](terragrunt-k8s/create-k8s-by-terraform-in-yc.md)
+Создание kubernetes кластера кратко описана в файле [create-k8s-by-terraform-in-yc.md]
+(terragrunt-k8s/create-k8s-by-terraform-in-yc.md)
 
 # Установка hashicorp vault. Если у вас hashicorp vault, то пропускаем раздел.
 ```shell
