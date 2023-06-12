@@ -105,9 +105,9 @@ external-secrets/external-secrets \
     --set installCRDs=true
 ```
 
-Настройка external-secrets
- - Указываем `role_id` в файле external-secrets/secret-store.yaml в поле `roleId`.
- - Указываем `secret_id` в файле external-secrets/vault-secret.yaml в поле `secret-id`.
+Настройка external-secrets.
+ - Указываем `role_id` в файле `external-secrets/secret-store.yaml` в поле `roleId`.
+ - Указываем `secret_id` в файле `external-secrets/vault-secret.yaml` в поле `secret-id`.
 Файлы конфигурации в директории external-secrets подробно документированы.
 
 
