@@ -9,7 +9,7 @@ external-secrets-operator. Также будет использован Terragru
 
 Создание kubernetes кластера примерно описана в файле [create-k8s-by-terraform-in-yc.md](terragrunt-k8s/create-k8s-by-terraform-in-yc.md)
 
-# Установка hashicorp vault
+# Установка hashicorp vault. Если у вас hashicorp vault, то пропускаем раздел.
 ```shell
 helm install vault oci://registry-1.docker.io/bitnamicharts/vault --version 0.2.1 -n vault --create-namespace
 ```
