@@ -68,6 +68,7 @@ export VAULT_TOKEN=hvs.1b7lfNCYOEnfpHLBRjNvTVhO
 ```shell
 terraform init
 terraform apply
+cd ..
 ```
 
 - Создайте секрет из CLI.
