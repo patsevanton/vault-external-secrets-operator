@@ -98,6 +98,7 @@ helm repo add external-secrets https://charts.external-secrets.io
 ```shell
 helm install external-secrets \
 external-secrets/external-secrets \
+    --wait \
     -n external-secrets \
     --create-namespace \
     --version 0.8.3 \
@@ -113,6 +114,21 @@ external-secrets/external-secrets \
 Применяем yaml из директории external-secrets
 ```shell
 kubectl apply -f external-secrets
+```
+
+Дебаг:
+ClusterSecretStore c названием vault-backend должен иметь CAPABILITIES - ReadWrite.
+```shell
+$ kubectl get ClusterSecretStore vault-backend
+NAME            AGE     STATUS   CAPABILITIES   READY
+vault-backend   3m19s   Valid    ReadWrite      True
+```
+
+Если ExternalSecret имеет статус SecretSyncedError, то смотрим describe.
+```shell
+$ kubectl get ExternalSecret -n external-secrets external-secret
+NAMESPACE          NAME              STORE           REFRESH INTERVAL   STATUS              READY
+external-secrets   external-secret   vault-backend   5s                 SecretSyncedError   False
 ```
 
 # Links:
