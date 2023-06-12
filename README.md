@@ -150,17 +150,27 @@ Code: 403. Errors:
 Тестирование AppRole используя Vault cli.
 Входим в vault используя `role_id` и `secret_id`
 ```shell
-vault write auth/approle/login role_id="role_id" secret_id="secret_id"
+$ vault write auth/approle/login role_id="" secret_id=""
+Key                     Value
+---                     -----
+token                   hvs.CAESILZuXjEGHKTTUD7WjNKDXijGSDLrWTWvE6xzB6O2BXrxGh4KHGh2cy5tZEZhNFVIODdhUktjRDViQVFaUmswc20
+token_accessor          tNDR6kn0R3rM1idryFOkSBmi
+token_duration          768h
+token_renewable         true
+token_policies          ["default" "read-policy"]
+identity_policies       []
+policies                ["default" "read-policy"]
+token_meta_role_name    data
 ```
 
 Получаем список секретов
 ```shell
-vault kv list argocd/
+vault kv list data/
 ```
 
 Прочитаем секрет
 ```shell
-vault kv get test3/mysecret
+vault kv get data/postgres
 ```
 
 # Links:
