@@ -26,13 +26,13 @@ vault-server-0                    0/1     Pending   0          7s
 - Инициализируйте один сервер хранилища с количеством общих ключей по умолчанию и пороговым значением ключа по умолчанию:
 ```shell
 $ kubectl exec -ti vault-server-0 -n vault -- vault operator init
-Unseal Key 1: aXVLHxZ8vHVR/10FFKMiUTfmnvtdD3jwSinY3lLwkqOb
-Unseal Key 2: ve96GMnb/sOD50p9hMRURpGfqcQpAJaXVxGJoVV2PQ3q
-Unseal Key 3: Mpe4CBsCrzcBJ9X1IxSDGYeCcZVATBjm62yJUj+8d73p
-Unseal Key 4: yiIviQ6ccCzyVNdSdKyHLdVChbeGvO6CnW/erhx0hhiz
-Unseal Key 5: RVrtmdxFIdhwlEja03xQcsNfXebv8GDzIRLeXXa+zKiw
+Unseal Key 1: A1zYR6DZ3n29AKHr5bOJLj8fFkWpGKiKm8FTeYCtLk6z
+Unseal Key 2: qEl/ng1ErOXUQx7XoA1vGOnFn8K+70pQpEXTuopsAKEP
+Unseal Key 3: 7CSLzJmloLs7bWC9EeCMUazy/dOfPF6lJRgJsK06LSxP
+Unseal Key 4: F9GJcqYM7APaIPk+ZdrVz9enDtfm85cnm1tf+PvJTHu8
+Unseal Key 5: nSkLvgDy/2L/6QlNxDL9Kc/aCYnCSPY3hu4dEj2o7n+9
 
-Initial Root Token: hvs.qUQu9g4V9dv96yWlQ7QoSKSa
+Initial Root Token: hvs.t0chVgBFR0lRle6pHNnO7VhM
 ```
 
 - В выходных данных отображаются общие ключи и сгенерированный исходный корневой ключ. Распечатайте сервер hashicorp vault с общими ключами до тех пор, пока не будет достигнуто пороговое значение ключа:
@@ -62,7 +62,7 @@ cd vault-resource
 
 Экспортируем ваш токен (в данном случае root токен)
 ```shell
-export VAULT_TOKEN=hvs.qUQu9g4V9dv96yWlQ7QoSKSa
+export VAULT_TOKEN=hvs.t0chVgBFR0lRle6pHNnO7VhM
 ```
 
 Применим конфигурацию terraform.
@@ -115,10 +115,9 @@ external-secrets/external-secrets \
 
 Применяем yaml из директории external-secrets
 ```shell
-kubectl apply -f external-secrets
-# kubectl apply -f external-secrets/vault-secret.yaml
-# kubectl apply -f external-secrets/secret-store.yaml
-# kubectl apply -f external-secrets/external-secret.yaml
+kubectl apply -f external-secrets/vault-secret.yaml
+kubectl apply -f external-secrets/secret-store.yaml
+kubectl apply -f external-secrets/external-secret.yaml
 ```
 
 Дебаг:

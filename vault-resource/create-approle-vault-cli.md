@@ -22,13 +22,13 @@ policies             ["root"]
 
 - Включите engine kv из CLI.
 ```shell
-vault secrets enable -version=2 -path=data kv
+vault secrets enable -version=2 -path=secret kv
 ```
 
 Terraform код включения engine kv.
 ```hcl
-resource "vault_mount" "kvv2-data" {
-  path        = "data"
+resource "vault_mount" "kvv2-secret" {
+  path        = "secret"
   type        = "kv"
   options     = { version = "2" }
   description = "KV Version 2 secret engine mount"
@@ -37,13 +37,26 @@ resource "vault_mount" "kvv2-data" {
 
 - Создайте секрет из CLI.
 ```shell
-vault kv put data/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
+vault kv put secret/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
+==== Secret Path ====
+secret/data/postgres
+
+======= Metadata =======
+Key                Value
+---                -----
+created_time       2023-06-13T03:27:59.492399614Z
+custom_metadata    <nil>
+deletion_time      n/a
+destroyed          false
+version            1
 ```
+
+Обратим внимание на Secret Path: `secret/data/postgres`
 
 Terraform код создания секрета. Но лучше секреты в коде не держать.
 ```hcl
 resource "vault_kv_secret_v2" "example" {
-  mount = vault_mount.kvv2-data.path
+  mount = vault_mount.kvv2-secret.path
   name  = "secret"
   data_json = jsonencode(
     {
@@ -59,10 +72,10 @@ resource "vault_kv_secret_v2" "example" {
 $ vault secrets list
 Path          Type         Accessor              Description
 ----          ----         --------              -----------
-cubbyhole/    cubbyhole    cubbyhole_fc3b7606    per-token private secret storage
-data/         kv           kv_925ebd04           KV Version 2 secret engine mount
-identity/     identity     identity_f9561de2     identity store
-sys/          system       system_fc5b17f1       system endpoints used for control, policy and debugging
+cubbyhole/    cubbyhole    cubbyhole_22e57e30    per-token private secret storage
+identity/     identity     identity_10e6aaac     identity store
+secret/       kv           kv_6be1e2f8           n/a
+sys/          system       system_0ec7ea71       system endpoints used for control, policy and debugging
 ```
 
 - Включите approle из CLI.
@@ -80,7 +93,7 @@ resource "vault_auth_backend" "approle" {
 - Создайте политику для чтения по пути app/*
 ```shell
 vault policy write read-policy -<<EOF
-path "data/*" {
+path "secret/*" {
 capabilities = [ "read", "list" ]
 }
 EOF
@@ -92,7 +105,7 @@ resource "vault_policy" "read-policy" {
   name = "read-policy"
 
   policy = <<EOT
-path "data/*" {
+path "secret/*" {
   capabilities = ["read", "list"]
 }
 EOT
@@ -101,14 +114,14 @@ EOT
 
 - Создайте роль для approle.
 ```shell
-vault write auth/approle/role/data token_policies="read-policy"
+vault write auth/approle/role/secret token_policies="read-policy"
 ```
 
 Terraform код создания роли для approle.
 ```hcl
-resource "vault_approle_auth_backend_role" "data" {
+resource "vault_approle_auth_backend_role" "secret" {
   backend        = vault_auth_backend.approle.path
-  role_name      = "data"
+  role_name      = "secret"
   token_policies = ["read-policy"]
 }
 ```
@@ -116,26 +129,26 @@ resource "vault_approle_auth_backend_role" "data" {
 
 - Посмотрите политику
 ```shell
-vault read auth/approle/role/data
+vault read auth/approle/role/secret
 ```
 
 
 - Получите идентификатор роли approle (role_id)
 ```shell
-$ vault read auth/approle/role/data/role-id
+$ vault read auth/approle/role/secret/role-id
 Key        Value
 ---        -----
-role_id    c927b91b-16f5-83c1-8736-953a51395b43
+role_id    9288079d-5f31-46d4-7e43-2fb78ef42f87
 ```
 
 
 - Создайте и получите секретный идентификатор (secret_id)
 ```shell
-$ vault write -force auth/approle/role/data/secret-id
+$ vault write -force auth/approle/role/secret/secret-id
 Key                   Value
 ---                   -----
-secret_id             8f3312cb-ab4d-c090-16a6-11efdf7ed21a
-secret_id_accessor    06134d7c-0c50-d1ab-0931-9c55ba9c6518
+secret_id             dc86bb6f-5b22-b3cf-ae24-686222af4668
+secret_id_accessor    9d68da4e-c72a-791c-8bc8-2a972e032710
 secret_id_num_uses    0
 secret_id_ttl         0s
 ```
@@ -144,7 +157,7 @@ Terraform код создания секретного идентификато�
 ```hcl
 resource "vault_approle_auth_backend_role_secret_id" "id" {
   backend   = vault_auth_backend.approle.path
-  role_name = vault_approle_auth_backend_role.data.role_name
+  role_name = vault_approle_auth_backend_role.secret.role_name
 }
 ```
 
@@ -161,18 +174,29 @@ output "secret_id" {
 ### Проверяем, работает ли approle или нет
 - Войдите в систему, используя свою approle
 ```shell
-vault write auth/approle/login role_id="c927b91b-16f5-83c1-8736-953a51395b43" \
-secret_id="8f3312cb-ab4d-c090-16a6-11efdf7ed21a"
+$ vault write auth/approle/login role_id="" \
+secret_id=""
+Key                     Value
+---                     -----
+token                   hvs.CAESID5qAJ-0GDBxmTXiuFvvIH4_hZ-cTHPV_bDbR7FwbAcbGh4KHGh2cy5zcktmemxrRldIS08yWllpWVFBVFRKN0c
+token_accessor          nRg8XUUPoWJaX2Mn433ee8ko
+token_duration          768h
+token_renewable         true
+token_policies          ["default" "read-policy"]
+identity_policies       []
+policies                ["default" "read-policy"]
+token_meta_role_name    secret
+
 ```
 
 
 - Посмотрите ваши текущие секреты.
 ```shell
-vault kv list data
+vault kv list secret
 ```
 
 
 - Прочитайте секрет.
 ```shell
-vault kv get data/postgres
+vault kv get secret/postgres
 ```
