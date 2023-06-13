@@ -1,3 +1,4 @@
+# Включение engine kv из CLI.
 resource "vault_mount" "kvv2-secret" {
   path        = "secret"
   type        = "kv"
@@ -10,7 +11,7 @@ resource "vault_auth_backend" "approle" {
   type = "approle"
 }
 
-# Создание политики для чтения по пути secret/postgres
+# Создание политики для чтения по пути secret/data/postgres
 resource "vault_policy" "secret-read-policy" {
   name = "read-policy"
 
@@ -45,4 +46,3 @@ output "secret_id" {
   value     = vault_approle_auth_backend_role_secret_id.id.secret_id
   sensitive = true
 }
-

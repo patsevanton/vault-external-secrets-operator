@@ -19,20 +19,20 @@ helm install vault oci://registry-1.docker.io/bitnamicharts/vault --version 0.2.
 ```shell
 $ kubectl get pods --namespace "vault" -l app.kubernetes.io/instance=vault
 NAME                              READY   STATUS    RESTARTS   AGE
-vault-injector-6f8fb5dcff-52jwb   1/1     Running   0          4m
-vault-server-0                    0/1     Running   0          4m
+vault-injector-6f8fb5dcff-9zhgm   1/1     Running   0          51s
+vault-server-0                    0/1     Running   0          51s
 ```
 
 - Инициализируйте один сервер хранилища с количеством общих ключей по умолчанию и пороговым значением ключа по умолчанию:
 ```shell
 $ kubectl exec -ti vault-server-0 -n vault -- vault operator init
-Unseal Key 1: saVvgBvCu2Uo9S6w66hU0K97QttugIVOnc4wqyry7B23
-Unseal Key 2: ILRHCIG5iBKkN+GJV76dVXafGrWzOsLpEEJbK+jtcpWL
-Unseal Key 3: Dsh8wx+hkx88/P/DN+UM/ZdJEcS+qsgCb5AcmF8EjDnq
-Unseal Key 4: +0NdfXT/63TZDFGsgeo/C7v5TpAfp3YqiaA/9Mw3xb8j
-Unseal Key 5: +RWg1Qc0UAEfocRWtLOdBCIJayAS6GdHUXk/oTtnpOLo
+Unseal Key 1: ircItR+/QeLTsve4J3zqw9SPGhC5rDAuxZcz4jr8u4N/
+Unseal Key 2: T/L9vkkm3+uo0H9XxADNAsr+YUCSPctnLC/011S79AVg
+Unseal Key 3: gmSD+fb5A+4P7N3QLDtoLtzuiXnQuhE/Y4uB1RTlRU6h
+Unseal Key 4: nMTwQQy81EPS8eS//kNicnvE5botOc5jyjHVuuqGkva7
+Unseal Key 5: 1roVdnVqvZnHroOijEZFMiueeGE1WF2WWRUWJ4MWCjyF
 
-Initial Root Token: hvs.Fn8kK1BkuudWYa9K8PuEJKki
+Initial Root Token: hvs.bY28dn6cKyp6JCvPLTV3Eufb
 ```
 
 - В выходных данных отображаются общие ключи и сгенерированный исходный корневой ключ. Распечатайте сервер hashicorp vault с общими ключами до тех пор, пока не будет достигнуто пороговое значение ключа:
@@ -71,7 +71,7 @@ resource "vault_auth_backend" "approle" {
   type = "approle"
 }
 
-# Создание политики для чтения по пути secret/postgres
+# Создание политики для чтения по пути secret/data/postgres
 resource "vault_policy" "secret-read-policy" {
   name = "read-policy"
 
@@ -108,9 +108,11 @@ output "secret_id" {
 }
 ```
 
+Пример `setting-approle-vault.tf` есть в директории vault-resource.
+
 Экспортируем ваш токен (в данном случае root токен)
 ```shell
-export VAULT_TOKEN=hvs.Fn8kK1BkuudWYa9K8PuEJKki
+export VAULT_TOKEN=hvs.bY28dn6cKyp6JCvPLTV3Eufb
 ```
 
 Применим конфигурацию terraform.
@@ -119,7 +121,7 @@ terraform init
 terraform apply
 ```
 
-- Создайте секрет из CLI.
+- Создайте секрет из CLI. Здесь указываем `secret/postgres` без `data`.
 ```shell
 $ vault kv put secret/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
 ==== Secret Path ====
