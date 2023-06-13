@@ -26,13 +26,13 @@ vault-server-0                    0/1     Pending   0          7s
 - Инициализируйте один сервер хранилища с количеством общих ключей по умолчанию и пороговым значением ключа по умолчанию:
 ```shell
 $ kubectl exec -ti vault-server-0 -n vault -- vault operator init
-Unseal Key 1: +11HD7BX4po1IrSd7eBGA28bGbnOos2pvtNOitth2PLG
-Unseal Key 2: MCZ2fpqAns/agQnL5AMCNckAQEPtaDELsfFhJR+54wxS
-Unseal Key 3: wlmd1CYZWeThymRSgX701568UZMyFunlXLh4TOsEeQ3R
-Unseal Key 4: eMCbp0uwpHMbyUyCDk464ToO8cK20XAUQ+Bu+5dfn7ux
-Unseal Key 5: IS6cXYvt2zfi+WlJyV2v0uf4mEZVcC8utRqNWwkuaXHz
+Unseal Key 1: aXVLHxZ8vHVR/10FFKMiUTfmnvtdD3jwSinY3lLwkqOb
+Unseal Key 2: ve96GMnb/sOD50p9hMRURpGfqcQpAJaXVxGJoVV2PQ3q
+Unseal Key 3: Mpe4CBsCrzcBJ9X1IxSDGYeCcZVATBjm62yJUj+8d73p
+Unseal Key 4: yiIviQ6ccCzyVNdSdKyHLdVChbeGvO6CnW/erhx0hhiz
+Unseal Key 5: RVrtmdxFIdhwlEja03xQcsNfXebv8GDzIRLeXXa+zKiw
 
-Initial Root Token: hvs.CrExyiVG0WEXxh0SFW6exhtN
+Initial Root Token: hvs.qUQu9g4V9dv96yWlQ7QoSKSa
 ```
 
 - В выходных данных отображаются общие ключи и сгенерированный исходный корневой ключ. Распечатайте сервер hashicorp vault с общими ключами до тех пор, пока не будет достигнуто пороговое значение ключа:
@@ -42,7 +42,7 @@ $ kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal
 $ kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal Key 3
 ```
 
-- В отдельном терминале пробросьте порт 8200 от hashicorp vault
+- В ОТДЕЛЬНОМ терминале пробросьте порт 8200 от hashicorp vault
 ```shell 
 kubectl port-forward vault-server-0 8200:8200 -n vault
 ```
@@ -62,7 +62,7 @@ cd vault-resource
 
 Экспортируем ваш токен (в данном случае root токен)
 ```shell
-export VAULT_TOKEN=hvs.CrExyiVG0WEXxh0SFW6exhtN
+export VAULT_TOKEN=hvs.qUQu9g4V9dv96yWlQ7QoSKSa
 ```
 
 Применим конфигурацию terraform.
@@ -73,7 +73,7 @@ terraform apply
 
 - Создайте секрет из CLI.
 ```shell
-vault kv put data/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
+vault kv put secret/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
 ```
 
 Либо создайте Vault секрет через UI как показано на скриншоте:
@@ -180,7 +180,7 @@ resource "vault_policy" "secret-read-policy" {
   name = "read-policy"
 
   policy = <<EOT
-path "secret/*" {
+path "*" {
   capabilities = ["read", "list"]
 }
 EOT
