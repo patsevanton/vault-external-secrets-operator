@@ -19,27 +19,27 @@ helm install vault oci://registry-1.docker.io/bitnamicharts/vault --version 0.2.
 ```shell
 $ kubectl get pods --namespace "vault" -l app.kubernetes.io/instance=vault
 NAME                              READY   STATUS    RESTARTS   AGE
-vault-injector-6f8fb5dcff-bbl2s   0/1     Running   0          14s
-vault-server-0                    0/1     Pending   0          7s
+vault-injector-6f8fb5dcff-52jwb   1/1     Running   0          4m
+vault-server-0                    0/1     Running   0          4m
 ```
 
 - Инициализируйте один сервер хранилища с количеством общих ключей по умолчанию и пороговым значением ключа по умолчанию:
 ```shell
 $ kubectl exec -ti vault-server-0 -n vault -- vault operator init
-Unseal Key 1: A1zYR6DZ3n29AKHr5bOJLj8fFkWpGKiKm8FTeYCtLk6z
-Unseal Key 2: qEl/ng1ErOXUQx7XoA1vGOnFn8K+70pQpEXTuopsAKEP
-Unseal Key 3: 7CSLzJmloLs7bWC9EeCMUazy/dOfPF6lJRgJsK06LSxP
-Unseal Key 4: F9GJcqYM7APaIPk+ZdrVz9enDtfm85cnm1tf+PvJTHu8
-Unseal Key 5: nSkLvgDy/2L/6QlNxDL9Kc/aCYnCSPY3hu4dEj2o7n+9
+Unseal Key 1: saVvgBvCu2Uo9S6w66hU0K97QttugIVOnc4wqyry7B23
+Unseal Key 2: ILRHCIG5iBKkN+GJV76dVXafGrWzOsLpEEJbK+jtcpWL
+Unseal Key 3: Dsh8wx+hkx88/P/DN+UM/ZdJEcS+qsgCb5AcmF8EjDnq
+Unseal Key 4: +0NdfXT/63TZDFGsgeo/C7v5TpAfp3YqiaA/9Mw3xb8j
+Unseal Key 5: +RWg1Qc0UAEfocRWtLOdBCIJayAS6GdHUXk/oTtnpOLo
 
-Initial Root Token: hvs.t0chVgBFR0lRle6pHNnO7VhM
+Initial Root Token: hvs.Fn8kK1BkuudWYa9K8PuEJKki
 ```
 
 - В выходных данных отображаются общие ключи и сгенерированный исходный корневой ключ. Распечатайте сервер hashicorp vault с общими ключами до тех пор, пока не будет достигнуто пороговое значение ключа:
 ```shell
-$ kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal Key 1
-$ kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal Key 2
-$ kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal Key 3
+kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal Key 1
+kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal Key 2
+kubectl exec -ti vault-server-0 -n vault -- vault operator unseal # ... Unseal Key 3
 ```
 
 - В ОТДЕЛЬНОМ терминале пробросьте порт 8200 от hashicorp vault
@@ -55,14 +55,62 @@ export VAULT_ADDR=http://127.0.0.1:8200
 Вы можете либо настроить AppRole в Vault из CLI либо через terraform код.
 
 Настроим AppRole Vault через terraform.
-Переходим в директорию с файлом `setting-approle-vault.tf`
-```shell
-cd vault-resource
+
+Создайте `setting-approle-vault.tf` со следующим содержимым:
+```hcl
+# Включение engine kv из CLI.
+resource "vault_mount" "kvv2-secret" {
+  path        = "secret"
+  type        = "kv"
+  options     = { version = "2" }
+  description = "KV Version 2 secret engine mount"
+}
+
+# Включение approle из CLI.
+resource "vault_auth_backend" "approle" {
+  type = "approle"
+}
+
+# Создание политики для чтения по пути secret/postgres
+resource "vault_policy" "secret-read-policy" {
+  name = "read-policy"
+
+  policy = <<EOT
+path "secret/data/postgres" {
+  capabilities = ["read", "list"]
+}
+EOT
+}
+
+# Создание роль для approle.
+resource "vault_approle_auth_backend_role" "secret" {
+  backend        = vault_auth_backend.approle.path
+  role_name      = "secret"
+  token_policies = ["read-policy"]
+}
+
+# Создание секретного идентификатора (secret_id)
+resource "vault_approle_auth_backend_role_secret_id" "id" {
+  backend   = vault_auth_backend.approle.path
+  role_name = vault_approle_auth_backend_role.secret.role_name
+}
+
+# Получение id роли approle (role_id)
+output "role_id" {
+  value     = vault_approle_auth_backend_role.secret.role_id
+  sensitive = true
+}
+
+# Получение секретного идентификатора (secret_id)
+output "secret_id" {
+  value     = vault_approle_auth_backend_role_secret_id.id.secret_id
+  sensitive = true
+}
 ```
 
 Экспортируем ваш токен (в данном случае root токен)
 ```shell
-export VAULT_TOKEN=hvs.t0chVgBFR0lRle6pHNnO7VhM
+export VAULT_TOKEN=hvs.Fn8kK1BkuudWYa9K8PuEJKki
 ```
 
 Применим конфигурацию terraform.
@@ -73,18 +121,30 @@ terraform apply
 
 - Создайте секрет из CLI.
 ```shell
-vault kv put secret/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
+$ vault kv put secret/postgres POSTGRES_USER=admin POSTGRES_PASSWORD=123456
+==== Secret Path ====
+secret/data/postgres
+
+======= Metadata =======
+Key                Value
+---                -----
+created_time       2023-06-13T04:02:53.164920751Z
+custom_metadata    <nil>
+deletion_time      n/a
+destroyed          false
+version            1
 ```
+
+Обратим внимание что Secret Path имеет значение `secret/data/postgres`.
+Именно этот Secret Path прописываем в external-secret.yaml.
 
 Либо создайте Vault секрет через UI как показано на скриншоте:
 ![Create-vault-secret-from-cli.png](vault-resource/Create-vault-secret-from-cli.png)
 
 Выведим на экран терминала role-id и secret-id и запоминаем их значение.
-B выходим из директории vault-resource.
 ```shell
 terraform output role_id
 terraform output secret_id
-cd ..
 ```
 
 Если вам интересно настроить AppRole в Vault из CLI, то настройка описано в отдельном файле 

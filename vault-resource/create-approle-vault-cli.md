@@ -93,7 +93,7 @@ resource "vault_auth_backend" "approle" {
 - Создайте политику для чтения по пути app/*
 ```shell
 vault policy write read-policy -<<EOF
-path "secret/*" {
+path "secret/data/postgres" {
 capabilities = [ "read", "list" ]
 }
 EOF
@@ -105,7 +105,7 @@ resource "vault_policy" "read-policy" {
   name = "read-policy"
 
   policy = <<EOT
-path "secret/*" {
+path "secret/data/postgres" {
   capabilities = ["read", "list"]
 }
 EOT
